@@ -1,12 +1,12 @@
 from flask import Blueprint, request, jsonify
-from config import app, db
+from config import db
 from models import HourEntry
 from datetime import datetime
 
-hour_entry_bp = Blueprint("hour_entry", __name__, url_prefix="/api")
+hour_entry = Blueprint("hour_entry", __name__, url_prefix="/api")
 
 
-@hour_entry_bp.route("/hour_entry", methods=["GET"])
+@hour_entry.route("/hour_entry", methods=["GET"])
 def get_hour_entry():
     id = request.args.get("id")
     user = request.args.get("user")
@@ -36,7 +36,7 @@ def get_hour_entry():
     return jsonify({"hourEntry": json_hour_entries})
 
 
-@hour_entry_bp.route("/add_hour_entry", methods=["POST"])
+@hour_entry.route("/add_hour_entry", methods=["POST"])
 def add_hour_entry():
     done_at = request.json.get("doneAt")
     project = request.json.get("project")
@@ -72,7 +72,7 @@ def add_hour_entry():
     return jsonify({"message": "Hour entry added"}), 201
 
 
-@hour_entry_bp.route("/update_hour_entry", methods=["PATCH"])
+@hour_entry.route("/update_hour_entry", methods=["PATCH"])
 def edit_hour_entry():
     id = request.args.get("id")
     hour_entry = HourEntry.query.get(id)
@@ -102,7 +102,7 @@ def edit_hour_entry():
     return jsonify({"message": "Hour entry updated"}), 200
 
 
-@hour_entry_bp.route("/delete_hour_entry", methods=["DELETE"])
+@hour_entry.route("/delete_hour_entry", methods=["DELETE"])
 def delete_hour_entry():
     id = request.args.get("id")
     hour_entry = HourEntry.query.get(id)

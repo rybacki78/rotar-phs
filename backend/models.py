@@ -4,12 +4,16 @@ from config import db
 class Project(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     project = db.Column(db.String(12), unique=True, nullable=False)
+    item_prod = db.Column(db.String(30), unique=False, nullable=False)
+    item_description = db.Column(db.String(60), unique=False, nullable=False)
     status = db.Column(db.String(1), unique=False, nullable=False)
 
     def to_json(self):
         return {
             "id": self.id,
             "project": self.project,
+            "itemProd": self.item_prod,
+            "itemDescription": self.item_description,
             "status": self.status,
         }
 
