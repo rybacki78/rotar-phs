@@ -1,0 +1,37 @@
+# POST
+POST http://127.0.0.1:5000/api/add_hour_entry HTTP/1.1
+content-type: application/json
+
+{
+  "doneAt": "2025-1-11",
+  "project": "PR2500000425",
+  "quantity": "6.35",
+  "user": "3"
+}
+
+
+### GET
+GET http://127.0.0.1:5000/api/hour_entry HTTP/1.1
+
+
+###
+GET http://127.0.0.1:5000/api/hour_entry?user=3 HTTP/1.1
+
+
+###
+GET http://127.0.0.1:5000/api/hour_entry?id=14 HTTP/1.1
+
+
+### PATCH
+PATCH http://127.0.0.1:5000/api/update_hour_entry?id=2
+content-type: application/json
+
+{
+  "project": "PR2500000825",
+  "quantity": "6.35",
+  "user": "5"
+}
+
+
+### DELETE
+DELETE  http://127.0.0.1:5000/api/delete_hour_entry?id=5

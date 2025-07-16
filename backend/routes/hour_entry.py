@@ -1,11 +1,13 @@
-from flask import request, jsonify
+from flask import Blueprint, request, jsonify
 from config import app, db
 from models import HourEntry
 from datetime import datetime
 
+hour_entry_bp = Blueprint("hour_entry", __name__, url_prefix="/api")
 
-@app.route("/hourentry", methods=["GET"])
-def get_hourentry():
+
+@hour_entry_bp.route("/hour_entry", methods=["GET"])
+def get_hour_entry():
     id = request.args.get("id")
     user = request.args.get("user")
     project = request.args.get("project")
@@ -34,8 +36,8 @@ def get_hourentry():
     return jsonify({"hourEntry": json_hour_entries})
 
 
-@app.route("/addhourentry", methods=["POST"])
-def add_hourentry():
+@hour_entry_bp.route("/add_hour_entry", methods=["POST"])
+def add_hour_entry():
     done_at = request.json.get("doneAt")
     project = request.json.get("project")
     quantity = request.json.get("quantity")
@@ -58,6 +60,7 @@ def add_hourentry():
         quantity=quantity,
         user=user,
         created_at=datetime.utcnow(),
+        edited_at=datetime.utcnow(),
     )
 
     try:
@@ -66,14 +69,48 @@ def add_hourentry():
     except Exception as e:
         return jsonify({"message": str(e)}), 400
 
-    return jsonify({"meassge": "Hour entry added"}), 201
+    return jsonify({"message": "Hour entry added"}), 201
 
-@app.route("/updatehourentry", methods=["PATCH"])
-def edit_entry():
+
+@hour_entry_bp.route("/update_hour_entry", methods=["PATCH"])
+def edit_hour_entry():
     id = request.args.get("id")
     hour_entry = HourEntry.query.get(id)
-    
+
     if not hour_entry:
         return jsonify({"message": "Hour entry not found"}), 404
-    
-    
+
+    data = request.json
+
+    done_at = data.get("doneAt")
+    if done_at:
+        try:
+            hour_entry.done_at = datetime.strptime(done_at, "%Y-%m-%d").date()
+        except ValueError:
+            return (
+                jsonify({"message": "Invalid date format for doneAt. Use YYYY-MM-DD"}),
+                400,
+            )
+
+    hour_entry.project = data.get("project", hour_entry.project)
+    hour_entry.quantity = data.get("quantity", hour_entry.quantity)
+    hour_entry.user = data.get("user", hour_entry.user)
+    hour_entry.edited_at = datetime.utcnow()
+
+    db.session.commit()
+
+    return jsonify({"message": "Hour entry updated"}), 200
+
+
+@hour_entry_bp.route("/delete_hour_entry", methods=["DELETE"])
+def delete_hour_entry():
+    id = request.args.get("id")
+    hour_entry = HourEntry.query.get(id)
+
+    if not hour_entry:
+        return jsonify({"message": "Hour entry not found"}), 404
+
+    db.session.delete(hour_entry)
+    db.session.commit()
+
+    return jsonify({"message": "Hour entry deleted"}), 200
