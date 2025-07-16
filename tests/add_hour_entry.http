@@ -1,0 +1,10 @@
+POST http://127.0.0.1:5000/addhourentry HTTP/1.1
+content-type: application/json
+
+{
+    "doneAt": "2025-1-15",
+    "project": "PR2555553212",
+    "quantity": "8",
+    "user": "4"
+}
+

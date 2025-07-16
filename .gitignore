@@ -1,0 +1,9 @@
+# python
+.venv/
+__pycache__/
+
+# dev
+.testing
+
+# flask
+instance/
