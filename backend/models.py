@@ -20,15 +20,15 @@ class Project(db.Model):
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    first_name = db.Column(db.String(60), unique=False, nullable=False)
-    last_name = db.Column(db.String(60), unique=False, nullable=False)
+    last_name = db.Column(db.String(64), unique=False, nullable=False)
+    first_name = db.Column(db.String(64), unique=False, nullable=False)
     exact_number = db.Column(db.Integer, unique=True, nullable=False)
 
     def to_json(self):
         return {
             "id": self.id,
-            "firstName": self.first_name,
             "lastName": self.last_name,
+            "firstName": self.first_name,
             "exactNumber": self.exact_number,
         }
 

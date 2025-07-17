@@ -1,5 +1,5 @@
 from config import app, db
-from routes import hour_entry, project
+from routes import hour_entry, user, project
 
 
 if __name__ == "__main__":
@@ -7,5 +7,6 @@ if __name__ == "__main__":
         db.create_all()
 
     app.register_blueprint(hour_entry)
+    app.register_blueprint(user)
     app.register_blueprint(project)
     app.run(debug=True)

@@ -32,7 +32,12 @@ def get_hour_entry():
             )
 
     hour_entries = query.all()
+
+    if not hour_entries:
+        return jsonify({"message": "Hour entry not found"}), 404
+
     json_hour_entries = [entry.to_json() for entry in hour_entries]
+    
     return jsonify({"hourEntry": json_hour_entries})
 
 

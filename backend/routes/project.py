@@ -1,7 +1,5 @@
 from flask import Blueprint, request, jsonify
-from config import db
 from models import Project
-from datetime import datetime
 
 project = Blueprint("project", __name__, url_prefix="/api")
 
@@ -11,6 +9,14 @@ def sync_projects():
     pass
 
 
-@project.route("/get_projects", methods=["POST"])
+@project.route("/get_projects", methods=["GET"])
 def get_projects():
-    pass
+    project = request.args.get("project")
+
+    if project:
+        query = Project.query.filter_by(project=project)
+
+    projects = query.all()
+    json_projects = [project.to_json() for project in projects]
+
+    return jsonify({"project": json_projects})

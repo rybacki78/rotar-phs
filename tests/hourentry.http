@@ -3,10 +3,10 @@ POST http://127.0.0.1:5000/api/add_hour_entry HTTP/1.1
 content-type: application/json
 
 {
-  "doneAt": "2025-1-11",
-  "project": "PR2500000425",
+  "doneAt": "2026-12-11",
+  "project": "PR2500005425",
   "quantity": "6.35",
-  "user": "3"
+  "user": "6"
 }
 
 
@@ -15,15 +15,15 @@ GET http://127.0.0.1:5000/api/hour_entry HTTP/1.1
 
 
 ###
-GET http://127.0.0.1:5000/api/hour_entry?user=3 HTTP/1.1
+GET http://127.0.0.1:5000/api/hour_entry?user=2 HTTP/1.1
 
 
 ###
-GET http://127.0.0.1:5000/api/hour_entry?id=14 HTTP/1.1
+GET http://127.0.0.1:5000/api/hour_entry?id=15 HTTP/1.1
 
 
 ### PATCH
-PATCH http://127.0.0.1:5000/api/update_hour_entry?id=2
+PATCH http://127.0.0.1:5000/api/update_hour_entry?id=22
 content-type: application/json
 
 {
@@ -34,4 +34,4 @@ content-type: application/json
 
 
 ### DELETE
-DELETE  http://127.0.0.1:5000/api/delete_hour_entry?id=5
+DELETE  http://127.0.0.1:5000/api/delete_hour_entry?id=7
