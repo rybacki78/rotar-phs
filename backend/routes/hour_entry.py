@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from config import db
-from models import HourEntry
+from models import HourEntry, Project, User
 from datetime import datetime
 
 hour_entry = Blueprint("hour_entry", __name__, url_prefix="/api")
@@ -37,7 +37,7 @@ def get_hour_entry():
         return jsonify({"message": "Hour entry not found"}), 404
 
     json_hour_entries = [entry.to_json() for entry in hour_entries]
-    
+
     return jsonify({"hourEntry": json_hour_entries})
 
 
@@ -48,8 +48,11 @@ def add_hour_entry():
     quantity = request.json.get("quantity")
     user = request.json.get("user")
 
-    if not done_at or not project or not quantity or not user:
-        return jsonify({"message": "Hour entry is not valid"}), 400
+    if not all([done_at, project, quantity, user]):
+        return (
+            jsonify({"message": "Hour entry is not valid, missing required fields"}),
+            400,
+        )
 
     try:
         done_at_date = datetime.strptime(done_at, "%Y-%m-%d").date()
@@ -58,6 +61,25 @@ def add_hour_entry():
             jsonify({"message": "Invalid date format for doneAt. Use YYYY-MM-DD"}),
             400,
         )
+
+    project = Project.query.filter_by(project=project).first()
+    if not project:
+        return jsonify({"message": "Project not found"}), 400
+    if project.status != "A":
+        return jsonify({"message": "Project is not active"}), 400
+
+    user = User.query.filter_by(exact_number=user).first()
+    if not user:
+        return jsonify({"message": "User not found"}), 400
+    if not user.in_phs:
+        return jsonify({"message": "User is not active"}), 400
+
+    try:
+        quantity = float(quantity)
+        if quantity <= 0:
+            raise ValueError
+    except ValueError:
+        return jsonify({"message": "Quantity must be a positive number"}), 400
 
     new_hour_entry = HourEntry(
         done_at=done_at_date,
@@ -72,6 +94,7 @@ def add_hour_entry():
         db.session.add(new_hour_entry)
         db.session.commit()
     except Exception as e:
+        db.session.rollback()
         return jsonify({"message": str(e)}), 400
 
     return jsonify({"message": "Hour entry added"}), 201

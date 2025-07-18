@@ -13,7 +13,3 @@ def get_sql_server_conn():
         "TrustServerCertificate=yes;"
     )
     return pyodbc.connect(conn_str)
-
-
-if __name__ == "__main__":
-    get_sql_server_conn()

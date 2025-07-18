@@ -4,9 +4,9 @@ content-type: application/json
 
 {
   "doneAt": "2026-12-11",
-  "project": "PR2500005425",
-  "quantity": "6.35",
-  "user": "6"
+  "project": "PR2500001044",
+  "quantity": 6.35,
+  "user": 1
 }
 
 

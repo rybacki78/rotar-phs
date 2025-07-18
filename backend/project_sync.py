@@ -1,9 +1,9 @@
 from sql_server_conn import get_sql_server_conn
 from config import app, db
-from models import User
+from models import Project
 
 
-def start_user_sync():
+def start_project_sync():
 
     with app.app_context():
 
@@ -12,28 +12,29 @@ def start_user_sync():
 
             cursor = get_sql_server_conn().cursor()
 
-            cursor.execute("SELECT * from CSPRY_PHS_users order by exactNumber")
+            cursor.execute("SELECT * FROM CSPRY_PHS_projects order by project")
             rows = cursor.fetchall()
 
-            User.query.delete()
+            Project.query.delete()
 
             for row in rows:
-                new_record = User(
-                    last_name=row.lastName,
-                    first_name=row.firstName,
-                    exact_number=row.exactNumber,
-                    in_phs=row.in_phs
+                new_record = Project(
+                    project=row.project,
+                    item_prod=row.itemProd,
+                    item_description=row.itemDescription,
+                    quantity=row.quantity,
+                    status=row.status
                 )
                 db.session.add(new_record)
 
             db.session.commit()
 
-            return True, "User sync done"
-
+            return True, "Project sync done"
+        
         except Exception as e:
             db.session.rollback()
 
-            return False, f"User sync failed, error: {e}"
+            return False, f"Project sync failed, error: {e}"
 
         finally:
             if "cursor" in locals():
@@ -43,4 +44,4 @@ def start_user_sync():
 
 
 if __name__ == "__main__":
-    start_user_sync()
+    print(start_project_sync())

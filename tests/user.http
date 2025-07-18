@@ -2,5 +2,13 @@
 GET http://127.0.0.1:5000/api/get_users HTTP/1.1
 
 
+###
+GET http://127.0.0.1:5000/api/get_users?exactNumber=1 HTTP/1.1
+
+
+###
+GET http://127.0.0.1:5000/api/get_users?inPhs=1 HTTP/1.1
+
+
 ### POST
 POST http://127.0.0.1:5000/api/sync_users HTTP/1.1
